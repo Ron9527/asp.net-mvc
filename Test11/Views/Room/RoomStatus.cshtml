@@ -1,0 +1,125 @@
+﻿@using Test11.Models
+@model IEnumerable<Test11.Models.roominfo>
+@*@model string*@
+@{
+    ViewBag.Title = "RoomStatus";
+    Layout = "/Views/Shared/_Layout.cshtml";
+    AjaxOptions ajaxOpts = new AjaxOptions
+    {
+        //Confirm = "Do you wish to request new data?",
+        //UpdateTargetId = "tableBody",
+
+        Url = Url.Action("GetRoomStatusJson"),
+        LoadingElementId = "loading",
+        LoadingElementDuration = 1000,
+        //OnSuccess = "empty"
+        OnSuccess = "processData"
+
+    };
+}
+<style>
+    table, th, td {
+        border: 2px solid red;
+        border-collapse: collapse;
+        text-align-last: center;
+        width: 800px;
+    }
+
+    tr {
+        height: 50px;
+    }
+</style>
+<script>
+    function processData2(data) {
+        var target = $("#tableBody");
+        target.empty();
+        for (var i = 0; i < data.length; i++) {
+            var p = data[i];
+            target.append("<tr><td>" + p.rId + "</td><td>" + p.rStatus + "</td><td>" + p.hId + "</td></tr>");
+        }
+    }
+    function processData(data) {
+        var target = $("#tableBody");
+        target.empty();
+        for (var i = 0; i < data.length; i++) {
+            var r = data[i];
+            var j,k;
+            switch (r.rStatus) {
+                case 0:
+                    j = "To do";
+                    break;
+                case 1:
+                    j = "In processing";
+                    break;
+                case 2:
+                    j = "Done";
+                    break;
+            }
+            switch (r.hId) {
+                case 0:
+                    k = '<a href=\"/TaskAssign/GetVacantHouseKeeper\">Assgin HouseKeeper</a>';
+                    break;
+                case -1:
+                    k = "";
+                    break;
+                default:
+                    k = r.hId;
+                    break;
+            }
+            target.append("<tr><td>" + r.rId + "</td><td>" + j + "</td><td>" + k + "</td></tr>");
+        }
+    }
+</script>
+<h2>
+    Room status
+</h2>
+<div id="loading" class="load" style="display:none">
+    <p>Loading Data.....</p>
+</div>
+<table>
+    <thead>
+        <tr>
+            <td>
+                RoomId
+            </td>
+            <td>
+                RoomStatus
+            </td>
+            <td>
+                HouseKeeperId
+            </td>
+        </tr>
+    </thead>
+    <tbody id="tableBody">
+        @Html.Action("GetRoomStatus", new { selectedStatus = @ViewBag.Message })
+    </tbody>
+</table>
+
+@using (Ajax.BeginForm(ajaxOpts))
+{
+    <div>
+        @Html.DropDownList("selectedStatus", new SelectList(
+    new[] { "All" }.Concat(Enum.GetNames(typeof(rStatus1)))))
+        <button type="submit">Submit</button>
+    </div>
+}
+<div>
+    @*Enum.GetNames(ViewBag.rooms.rStatus)*@
+    @foreach (string rstatus in Enum.GetNames(typeof(rStatus1)))
+    {
+        <div class="ajaxLink">
+            @Ajax.ActionLink(rstatus, "GetRoomStatus",
+            new { selectedStatus = rstatus },
+            new AjaxOptions
+            {
+                //UpdateTargetId ="tableBody",GetPeopleData
+                Url = Url.Action("GetRoomStatusJson", new { selectedStatus = Convert.ToString(rstatus) }),
+                //OnBegin = "OnBegin",
+                //OnFailure = "OnFailure",
+                //OnSuccess = "OnSuccess",
+                //OnComplete = "OnComplete",
+                OnSuccess = "processData"
+            })
+        </div>
+    }
+</div>

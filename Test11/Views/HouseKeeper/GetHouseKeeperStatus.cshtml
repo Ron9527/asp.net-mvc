@@ -1,0 +1,58 @@
+﻿@using Test11.Models
+@model IEnumerable<housekeeperinfo>
+<script>
+    function processData(data) {
+        var target = $("#tableBody");
+        target.empty();
+        for (var i = 0; i < data.length; i++)
+        {
+            var r = data[i];
+            var j;
+            switch (r.rStatus) {
+                case 0:
+                    j = "To do";
+                    break;
+                case 1:
+                    j = "In processing";
+                    break;
+                case 2:
+                    j = "Done";
+                    break;
+            }
+            target.append("<tr><td>" + r.hId + "</td><td>" + r.hName + "</td><td>" + j + "</td><td>" + r.rId + "</td></tr>");
+        }
+    }
+</script>
+@foreach (housekeeperinfo h in Model)
+{
+    <tr>
+        <td>@h.hId</td>
+        <td>@h.hName</td>
+        <td>
+            <script>
+            switch (@h.hStatus) {
+                case 0:
+                    var i = "Doing";
+                    break;
+                case 1:
+                    var i = "Waiting";
+                    break;
+            }
+            document.write(i);
+            </script>
+        </td>
+        <td>
+            <script>
+                switch (@h.hStatus) {
+                    case 0:
+                        document.write(@h.rId);
+                        break;
+                    case 1:
+                        document.write('<a href=\"/HouseKeeper/GetVacantRoom?selectedStatus=0\">Looking for room</a>');
+                        break;
+                }                
+            </script>     
+           
+        </td>
+    </tr>
+}

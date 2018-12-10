@@ -1,0 +1,61 @@
+﻿@using Test11.Models
+@model Tuple<List<housekeeperinfo>, List<roominfo>>
+@{
+    AjaxOptions ajaxOpts = new AjaxOptions
+    {
+        Confirm = "Do you wish to assgin task?",
+        Url = Url.Action("TaskAssign"),
+        LoadingElementId = "loading",
+        LoadingElementDuration = 1000,
+        OnSuccess = "processData"
+
+    };
+}
+<script>
+    function processData() {
+        var target = $("#tableBody");
+        var targetHead = $("#tableHead");
+        var back = $("#backToAssign");
+        targetHead.empty();
+        back.append(document.write('<a href=\"/TaskAssign/GetVacantHouseKeeper\">Assgin Success</a>'));
+    }
+</script>
+<div id="backToAssign" style="color:red; font:15; font-style:italic">
+</div>
+@for (int i = 0; i < Model.Item1.Count; i++)
+
+{
+    <tr>
+        <td id=hId>@Model.Item1[i].hId</td>
+        <td>@Model.Item1[i].hName</td>
+        <td>
+            <script>
+                switch (@Model.Item1[i].hStatus) {
+                    case 0:
+                        var i = "Doing";
+                        break;
+                    case 1:
+                        var i = "Waiting";
+                        break;
+                }
+                document.write(i);
+            </script>
+        </td>
+        @using (Ajax.BeginForm(ajaxOpts))
+        {
+            <td>
+                Select Room Id
+                @Html.DropDownList("roomId", Model.Item2.Select(item => new SelectListItem
+                 {
+                    Value = item.rId.ToString(),
+                       Text = item.rId.ToString(),
+                     Selected = "select" == item.rId.ToString()
+                 }))
+                <div id="submit">
+                    <input type="hidden" id="houseKeeperId" name="houseKeeperId" value= @Model.Item1[i].hId>
+                    <button type="submit">Confirm</button>
+                </div>
+            </td>
+        }
+    </tr>
+}

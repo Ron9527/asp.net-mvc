@@ -1,0 +1,171 @@
+﻿@using Test11.Models
+@model IEnumerable<Test11.Models.housekeeperinfo>
+@*@model Test11.Models.housekeeperinfo*@
+@{
+    ViewBag.Title = "HouseKeeperStatus";
+    Layout = "/Views/Shared/_Layout.cshtml";
+    AjaxOptions ajaxOpts = new AjaxOptions
+    {
+        //Confirm = "Do you wish to request new data?",
+        Url = Url.Action("GetHouseKeeperJson"),
+        LoadingElementId = "loading",
+        LoadingElementDuration = 1000,
+        OnSuccess = "processData1"
+
+    };
+}
+<style>
+    table, th, td {
+        border: 2px solid red;
+        border-collapse: collapse;
+        text-align-last: center;
+        width: 800px;
+    }
+
+    tr {
+        height: 50px;
+    }
+</style>
+<script>
+    function processData1(data) {
+        var target = $("#tableBody");
+        target.empty();
+        for (var i = 0; i < data.length; i++) {
+            var r = data[i];
+            var j;
+            switch (r.hStatus) {
+                case 0:
+                    j = "Doing";
+                    break;
+                case 1:
+                    j = "Waiting";
+                    break;
+            }
+            if (r.hStatus == 1) {
+                var k = '<a href=\"/HouseKeeper/GetVacantRoom?selectedStatus=0\">Looking for room</a>';
+                target.append("<tr><td>" + r.hId + "</td><td>" + r.hName + "</td><td>" + j + "</td><td>" + k + "</td></tr>");
+            }
+            else {
+                target.append("<tr><td>" + r.hId + "</td><td>" + r.hName + "</td><td>" + j + "</td><td>" + r.rId + "</td></tr>");
+            }
+
+        }
+    }
+    function processData(data) {
+        var target = $("#tableBody");
+        target.empty();
+        for (var i = 0; i < data.length; i++) {
+            var r = data[i];
+            var j;
+            switch (r.hStatus) {
+                case 0:
+                    j = "Doing";
+                    break;
+                case 1:
+                    j = "Waiting";
+                    break;
+            }
+            target.append("<tr><td>" + r.hId + "</td><td>" + r.hName + "</td><td>" + j + "</td><td>" + r.rId + "</td></tr>");
+        }
+    }
+</script>
+<h2>
+    HouseKeeper Status
+</h2>
+<div id="loading" class="load" style="display:none">
+    <p>Loading Data.....</p>
+</div>
+<table>
+    <thead>
+        <tr>
+            <td>
+                HouseKeeperId
+            </td>
+            <td>
+                HouseKeeperName
+            </td>
+            <td>
+                HouseKeeperStatus
+            </td>
+            <td>
+                RoomId
+            </td>
+        </tr>
+    </thead>
+    <tbody id="tableBody">
+        @Html.Action("GetHouseKeeperStatus", new { selectedStatus = "All" })
+    </tbody>
+</table>
+@using (Ajax.BeginForm(ajaxOpts))
+{
+<div>
+    @Html.DropDownList("selection", new SelectList(
+new[] { "Select" }.Concat(Enum.GetNames(typeof(houseKeeperInfo1)))),new { @onchange="Display();"})
+    <script>
+        function Display() {
+            var selection = document.getElementById("selection");
+            var x = document.getElementById("info");
+            var y = document.getElementById("infoText");
+            var z = document.getElementById("submit");
+            if (selection.selectedIndex == 0) {
+                x.style.display = "none";
+                y.style.display = "none";
+                z.style.display = "none";
+            }
+            else if (selection.selectedIndex == 2) {
+
+                x.style.display = "none";
+                y.style.display = "block";
+                z.style.display = "block";
+            }
+            else {
+                x.style.display = "block";
+                y.style.display = "none";
+                z.style.display = "block";
+            }
+        }
+        function CheckInput() {
+
+            if (document.getElementById("info").style.display == "block") {
+
+                if (document.getElementById("infox").value == null || document.getElementById("infox").value == "") {
+                    alert("empty  :");
+                    return false;
+                }
+            }
+            if (document.getElementById("infoText").style.display == "block") {
+                document.getElementById("infox").value = "";
+                if (document.getElementById("infoTexty").value == "" || document.getElementById("infoTexty").value == null) {
+                    alert("empty");
+                    return false;
+                }
+            }
+            return true;
+        }
+    </script>
+    <div id="info" style="display:none;">
+        Number Only:<input type="number" name="infox" id="infox" oninput="if(value.length>7)value=value.slice(0,7)" />
+    </div>
+    <div id="infoText" style="display:none;">
+        Text Only:<input type="text" name="infoTexty" id="infoTexty" />
+    </div>
+    <div id="submit" style="display:none;">
+        <button onclick=" return CheckInput();">Submit  </button>
+    </div>
+</div>
+}
+<p></p>
+<div>
+    @foreach (string hstatus in Enum.GetNames(typeof(hStatus1)))
+    {
+        <div class="ajaxLink">
+            @Ajax.ActionLink(hstatus, "GetHouseKeeperStatus",
+            new { selectedStatus = hstatus },
+            new AjaxOptions
+            {
+                Url = Url.Action("GetHouseKeeperStatusJson", new { selectedStatus = Convert.ToString(hstatus) }),
+                OnSuccess = "processData1"
+            })
+        </div>
+    }
+</div>

@@ -1,0 +1,30 @@
+﻿@*@using Test11.Models
+@model Tuple<List<housekeeperinfo>, List<roominfo>>
+@{
+    ViewBag.Title = "Assign Task";
+    Layout = "/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "TaskAssign";
+}
+
+<h2>TaskAssignResutl</h2>
+<table>
+    <thead>
+        <tr>
+            <td>housekeeperId</td>
+            <td>housekeepername</td>
+            <td>hosuekeeperstatus</td>
+            <td>roomId</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.Item1[0].hId</td>
+            <td>@Model.Item1[0].hName</td>
+            <td>@Model.Item1[0].hStatus</td>
+            <td>@Model.Item1[0].rId</td>
+        </tr>
+    </tbody>
+</table>
+<div>
+    <script>document.write('<a href=\"/HouseKeeper/GetVacantRoom?selectedStatus=0\">GO somewhere I decide</a>');</script>
+</div>*@

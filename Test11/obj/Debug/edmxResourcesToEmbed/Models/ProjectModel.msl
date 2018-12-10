@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ron_projectModelStoreContainer" CdmEntityContainer="ron_projectEntities">
+    <EntitySetMapping Name="housekeeperinfo">
+      <EntityTypeMapping TypeName="ron_projectModel.housekeeperinfo">
+        <MappingFragment StoreEntitySet="housekeeperinfo">
+          <ScalarProperty Name="hId" ColumnName="hId" />
+          <ScalarProperty Name="hName" ColumnName="hName" />
+          <ScalarProperty Name="hStatus" ColumnName="hStatus" />
+          <ScalarProperty Name="rId" ColumnName="rId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="roominfo">
+      <EntityTypeMapping TypeName="ron_projectModel.roominfo">
+        <MappingFragment StoreEntitySet="roominfo">
+          <ScalarProperty Name="rId" ColumnName="rId" />
+          <ScalarProperty Name="rStatus" ColumnName="rStatus" />
+          <ScalarProperty Name="hId" ColumnName="hId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,38 @@
+﻿@using Test11.Models
+@model Tuple<List<housekeeperinfo>, List<roominfo>>
+<style>
+    table, th, td {
+        border: 2px solid red;
+        border-collapse: collapse;
+        text-align-last: center;
+        width: 800px;
+    }
+
+    tr {
+        height: 50px;
+    }
+</style>
+<h2>
+    Assign Task To HouseKeeper
+</h2>
+<table>
+    <thead id="tableHead">
+        <tr>
+            <td>
+                HouseKeeperId
+            </td>
+            <td>
+                HouseKeeperName
+            </td>
+            <td>
+                HouseKeeperStatus
+            </td>
+            <td>
+                Assign Task
+            </td>
+        </tr>
+    </thead>
+    <tbody id="tableBody" class="updateBody">
+        @Html.Action("PartVacantHouseKeeper")
+    </tbody>
+</table>

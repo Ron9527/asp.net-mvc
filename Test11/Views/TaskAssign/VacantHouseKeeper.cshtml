@@ -1,0 +1,56 @@
+﻿@using Test11.Models
+@model Tuple<List<housekeeperinfo>, List<roominfo>>
+@{
+    ViewBag.Title = "Assign Task";
+    Layout = "/Views/Shared/_Layout.cshtml";
+    AjaxOptions ajaxOpts = new AjaxOptions
+    {
+        Confirm = "122222Do you wish to request new data?",
+        Url = Url.Action("TaskAssign"),
+        LoadingElementId = "loading",
+        LoadingElementDuration = 1000,
+        //OnSuccess = "processData"
+
+    };
+}
+@*<script>
+  function processData() {
+        alert("eeeeeeee :" + 123123 + "      rId:" + 123213 + "    hId:" + 12312 + "   hName:" +3123123);
+</script>*@
+      @foreach (housekeeperinfo h in Model.Item1)
+        {
+            <tr>
+                <td>@h.hId</td>
+                <td>@h.hName</td>
+                <td>
+                    <script>
+        switch (@h.hStatus) {
+            case 0:
+                var i = "Doing";
+                break;
+            case 1:
+                var i = "Waiting";
+                break;
+        }
+        document.write(i);
+                    </script>
+                </td>
+                @using (Ajax.BeginForm(ajaxOpts))
+                {
+                    <td>
+                        @Html.DropDownList("select", Model.Item2.Select(item => new SelectListItem
+                    {
+                        Value = item.rId.ToString(),
+                        Text = item.rId.ToString(),
+                        Selected = "select" == item.rId.ToString()
+                    }))
+                        <script>
+                            document.write('<a href=\"/TaskAssign/TaskAssign\">Confirm</a>');
+                        </script>
+                        <div id="submit">
+                            <button type="submit">Confirm</button>
+                        </div>
+                    </td>
+                }
+            </tr>
+        }

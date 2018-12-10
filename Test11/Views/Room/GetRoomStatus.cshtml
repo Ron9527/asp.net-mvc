@@ -1,0 +1,40 @@
+﻿@using Test11.Models
+@model IEnumerable<roominfo>
+@foreach (roominfo r in Model)
+{
+    <tr>
+        <td>@r.rId</td>
+        <td>
+            <script>
+            switch (@r.rStatus) {
+                case 0:
+                    var i = "To do";
+                    break;
+                case 1:
+                    var i = "In processing";
+                    break;
+                case 2:
+                    var i = "Done";
+                    break;
+            }
+            document.write(i);
+            </script>
+        </td>
+        <td>
+            <script>
+                switch (@r.hId) {
+                    case -1:
+                        document.write("");
+                        break;
+                    case 0:
+                        document.write('<a href=\"/TaskAssign/GetVacantHouseKeeper\">Assgin HouseKeeper</a>');
+                        //document.write("Assgin HouseKeeper");
+                        break;
+                    default:
+                        document.write(@r.hId);
+                        break;
+                }
+            </script>
+        </td>
+    </tr>
+}
